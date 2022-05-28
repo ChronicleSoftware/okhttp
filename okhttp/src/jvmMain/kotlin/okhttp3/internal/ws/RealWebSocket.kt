@@ -50,7 +50,7 @@ import okio.ByteString
 import okio.ByteString.Companion.encodeUtf8
 import okio.ByteString.Companion.toByteString
 
-class RealWebSocket(
+open class RealWebSocket(
   taskRunner: TaskRunner,
   /** The application's original request unadulterated by web socket headers. */
   private val originalRequest: Request,
@@ -74,7 +74,7 @@ class RealWebSocket(
   private var writerTask: Task? = null
 
   /** Null until this web socket is connected. Only accessed by the reader thread. */
-  private var reader: WebSocketReader? = null
+  var reader: WebSocketReader? = null
 
   // All mutable web socket state is guarded by this.
 
@@ -104,10 +104,10 @@ class RealWebSocket(
   private var queueSize = 0L
 
   /** True if we've enqueued a close frame. No further message frames will be enqueued. */
-  private var enqueuedClose = false
+  var enqueuedClose = false
 
   /** The close code from the peer, or -1 if this web socket has not yet read a close frame. */
-  private var receivedCloseCode = -1
+  var receivedCloseCode = -1
 
   /** The close reason from the peer, or null if this web socket has not yet read a close frame. */
   private var receivedCloseReason: String? = null
@@ -287,7 +287,7 @@ class RealWebSocket(
 
   /** Receive frames until there are no more. Invoked only by the reader thread. */
   @Throws(IOException::class)
-  fun loopReader() {
+  open fun loopReader() {
     while (receivedCloseCode == -1) {
       // This method call results in one or more onRead* methods being called on this thread.
       reader!!.processNextFrame()

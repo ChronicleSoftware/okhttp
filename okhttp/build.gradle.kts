@@ -7,6 +7,7 @@ plugins {
   id("org.jetbrains.dokka")
   id("com.vanniktech.maven.publish.base")
   id("binary-compatibility-validator")
+  id("maven-publish")
 }
 
 kotlin {
@@ -184,9 +185,9 @@ dependencies {
   osgiTestDeploy(libs.kotlin.stdlib.osgi)
 }
 
-mavenPublishing {
-  configure(KotlinMultiplatform(javadocJar = JavadocJar.Dokka("dokkaGfm")))
-}
+//mavenPublishing {
+//  configure(KotlinMultiplatform(javadocJar = JavadocJar.Dokka("dokkaGfm")))
+//}
 
 val copyKotlinTemplates = tasks.register<Copy>("copyKotlinTemplates") {
   from("src/commonMain/kotlinTemplates")
